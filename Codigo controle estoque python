@@ -1,0 +1,121 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPbyUp25yFl1rH4uwPWmNph",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/JAENED13/Projetos.Diversos/blob/main/Codigo%20controle%20estoque%20python\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 8,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "obk3KO9ICN9J",
+        "outputId": "43df69df-18d2-469c-86ac-8d090f093ff1"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "          quantity  price\n",
+            "Laptop          10   1200\n",
+            "Mouse           20     25\n",
+            "Keyboard        15     75\n",
+            "          quantity  price\n",
+            "Laptop           5   1200\n",
+            "Mouse           20     25\n",
+            "Keyboard        15     75\n",
+            "Monitor not found in inventory.\n",
+            "Not enough Mouse in stock.\n"
+          ]
+        }
+      ],
+      "source": [
+        "#python#\n",
+        "# This code provides a basic framework for inventory control in Google Colab.\n",
+        "# It does NOT directly integrate with SageMaker.  To integrate with SageMaker,\n",
+        "# you'd need to deploy a machine learning model to SageMaker that handles\n",
+        "# inventory predictions or optimization.  This code provides the data\n",
+        "# structures and functions to manage inventory locally.\n",
+        "\n",
+        "import pandas as pd\n",
+        "\n",
+        "def add_item(inventory, item_name, quantity, price):\n",
+        "  \"\"\"Adds an item to the inventory or updates existing quantity.\"\"\"\n",
+        "  if item_name in inventory:\n",
+        "    inventory[item_name]['quantity'] += quantity\n",
+        "  else:\n",
+        "    inventory[item_name] = {'quantity': quantity, 'price': price}\n",
+        "  return inventory\n",
+        "\n",
+        "\n",
+        "def remove_item(inventory, item_name, quantity):\n",
+        "  \"\"\"Removes an item from the inventory.\"\"\"\n",
+        "  if item_name in inventory:\n",
+        "    if inventory[item_name]['quantity'] >= quantity:\n",
+        "      inventory[item_name]['quantity'] -= quantity\n",
+        "      if inventory[item_name]['quantity'] == 0:\n",
+        "        del inventory[item_name]  # remove item if quantity is 0\n",
+        "      return inventory\n",
+        "    else:\n",
+        "      print(f\"Not enough {item_name} in stock.\")\n",
+        "      return inventory\n",
+        "  else:\n",
+        "    print(f\"{item_name} not found in inventory.\")\n",
+        "    return inventory\n",
+        "\n",
+        "\n",
+        "def view_inventory(inventory):\n",
+        "  \"\"\"Displays the current inventory.\"\"\"\n",
+        "  if not inventory:\n",
+        "    print(\"Inventory is empty.\")\n",
+        "    return\n",
+        "\n",
+        "  df = pd.DataFrame.from_dict(inventory, orient='index')\n",
+        "  print(df)\n",
+        "\n",
+        "\n",
+        "# Example usage:\n",
+        "inventory = {}\n",
+        "\n",
+        "inventory = add_item(inventory, \"Laptop\", 10, 1200)\n",
+        "inventory = add_item(inventory, \"Mouse\", 20, 25)\n",
+        "inventory = add_item(inventory, \"Keyboard\", 15, 75)\n",
+        "\n",
+        "view_inventory(inventory)\n",
+        "\n",
+        "\n",
+        "inventory = remove_item(inventory, \"Laptop\", 5)\n",
+        "view_inventory(inventory)\n",
+        "\n",
+        "inventory = remove_item(inventory, \"Monitor\", 2) # Example of trying to remove an item not in inventory#\n",
+        "\n",
+        "inventory = remove_item(inventory, \"Mouse\", 25) # Example of trying to remove more items than available#"
+      ]
+    }
+  ]
+}
