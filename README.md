@@ -1,3 +1,5 @@
+Nesse arquivo, criei um codigo para controle de estoque. Usando o python como linguagem.
+
 importar pandas como pd
 
 def add_item(estoque, nome_item, quantidade, preço):
